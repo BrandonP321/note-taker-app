@@ -12,6 +12,7 @@ module.exports = function(app) {
 
     app.post('/api/notes', function(req, res) {
         const newNotes = req.body
+        newNotes.id = data.length
 
         data.push(req.body)
 
@@ -30,6 +31,11 @@ module.exports = function(app) {
         console.log(notesId)
         data.splice(notesId, 1)
         console.log(data)
+
+        for (let identification in data) {
+            console.log(identification)
+            data[identification].id = identification
+        }
 
         fs.writeFileSync(dbPath, JSON.stringify(data, null, 4), function(err){
             if (err) throw err
