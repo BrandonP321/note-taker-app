@@ -2,6 +2,7 @@ const { json } = require('express');
 const fs = require('fs')
 const path = require('path')
 
+const dbPath = path.join(__dirname, '../db/db.json')
 let data = require('../db/db.json')
 
 module.exports = function(app) {
@@ -14,7 +15,7 @@ module.exports = function(app) {
 
         data.push(req.body)
 
-        fs.writeFileSync(path.join(__dirname, '../db/db.json'), JSON.stringify(data, null, 4), function(err) {
+        fs.writeFileSync(dbPath, JSON.stringify(data, null, 4), function(err) {
             if (err) {
                 throw err
             }
@@ -22,4 +23,18 @@ module.exports = function(app) {
 
         res.json(newNotes)
     });
+
+    app.delete('/api/notes/:id', function(req, res) {
+        // change below code to delete the object with the given id
+        const notesId = req.params.id
+        console.log(notesId)
+        data.splice(notesId, 1)
+        console.log(data)
+
+        fs.writeFileSync(dbPath, JSON.stringify(data, null, 4), function(err){
+            if (err) throw err
+        })
+
+        res.send('DELETE Request Called')
+    })
 }
